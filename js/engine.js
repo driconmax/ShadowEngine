@@ -3,7 +3,7 @@ class Engine {
      *
      */
     constructor(canvas, framerate, updaterate = 30) {        
-        this.renderer = new Renderer(canvas, framerate);
+        this.renderer = new Renderer(canvas, framerate, 3);
         this.objs = [];
         this.scripts = [];
         this.onKeyPressDown = {};
@@ -59,7 +59,8 @@ class Engine {
         scriptInstance.ctx = this.ctx; // Pass the canvas context
         this.scripts.push(scriptInstance);
         if (typeof scriptInstance.Create === 'function') {
-            scriptInstance.Create(this);
+            scriptInstance.SetDefaults(this, this.renderer);
+            scriptInstance.Create();
         }
     }
 

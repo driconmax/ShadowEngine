@@ -6,14 +6,20 @@ class ShadowScript {
         this.graphics = [];
         this.sobjects = [];
         this.engine;
+        this.renderer;
     }
 
     Load(){
 
     }
 
-    Create(engine){
+    SetDefaults(engine, renderer){
         this.engine = engine;
+        this.renderer = renderer;
+    }
+
+    Create(){
+
     }
     
     Update(timestep){

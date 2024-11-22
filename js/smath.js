@@ -109,6 +109,20 @@ class Matrix {
         return result;
     };
 
+    static Combine = (a, b) => {
+        const result = [];
+        for (let i = 0; i < 3; i++) {
+            result[i] = [];
+            for (let j = 0; j < 3; j++) {
+                result[i][j] = 0;
+                for (let k = 0; k < 3; k++) {
+                    result[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+        return result;
+    };
+
     static TransformPoint = (matrix, point) => {
         return new Vector3(
             matrix[0][0] * point.x + matrix[0][1] * point.y + matrix[0][2] * point.z + matrix[0][3],
@@ -116,4 +130,33 @@ class Matrix {
             matrix[2][0] * point.x + matrix[2][1] * point.y + matrix[2][2] * point.z + matrix[2][3]
         );
     };
+
+    static TransformPointDivide = (matrix, point) => {
+        const w = matrix[3][0] * point.x + matrix[3][1] * point.y + matrix[3][2] * point.z + matrix[3][3];
+        return new Vector3(
+            (matrix[0][0] * point.x + matrix[0][1] * point.y + matrix[0][2] * point.z + matrix[0][3]) / w,
+            (matrix[1][0] * point.x + matrix[1][1] * point.y + matrix[1][2] * point.z + matrix[1][3]) / w,
+            (matrix[2][0] * point.x + matrix[2][1] * point.y + matrix[2][2] * point.z + matrix[2][3]) / w
+        );
+    };
+
+    static CreatePerspectiveMatrix = (fov, aspect, near, far) => {
+        const f = 1 / Math.tan(fov / 2);
+        const rangeInv = 1 / (near - far);
+    
+        return [
+            [f / aspect, 0, 0, 0],
+            [0, f, 0, 0],
+            [0, 0, (far + near) * rangeInv, 2 * far * near * rangeInv],
+            [0, 0, -1, 0]
+        ];
+    };
+    
+    static MapToScreen(matrix, point, canvas) {
+        const transformed = Matrix.TransformPointDivide(matrix, point);
+        return {
+            x: (transformed.x + 1) * 0.5 * canvas.width,
+            y: (1 - transformed.y) * 0.5 * canvas.height // Invert Y-axis
+        };
+    }
 }
