@@ -47,7 +47,8 @@ class Body1 extends ShadowScript {
         this.circleObj.rotation.z += 1 * timestep;
 
         //this.renderer.camera.position.z = 0;
-        this.renderer.camera.position.z += 1000 * timestep;
+        //this.renderer.camera.position.y += 10 * timestep;
+        //this.renderer.camera.rotation.z += 1 * timestep;
     }
 }
 

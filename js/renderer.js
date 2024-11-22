@@ -29,7 +29,7 @@ class Renderer extends ShadowScript {
     }
 
     Draw(timestep){
-        const viewMatrix = this.camera.computeMatrix();
+        const viewMatrix = this.camera.computeInverseMatrix();
         if(this.dimensions == 3){
             //3D Perspective Logic
             const viewProjectionMatrix = Matrix.Multiply(this.perspectiveMatrix, viewMatrix);

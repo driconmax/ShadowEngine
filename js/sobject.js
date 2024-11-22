@@ -23,12 +23,15 @@ class SObject extends ShadowScript {
     }
     
     computeInverseMatrix() {
-        const translation = Matrix.CreateTranslationMatrix(-this.position.x, -this.position.y, -this.position.z);
-        const rotationX = Matrix.CreateRotationXMatrix(-this.rotation.x);
-        const rotationY = Matrix.CreateRotationYMatrix(-this.rotation.y);
-        const rotationZ = Matrix.CreateRotationZMatrix(-this.rotation.z);
+        const rotationX = Matrix.CreateRotationXMatrix(this.rotation.x);
+        const rotationY = Matrix.CreateRotationYMatrix(this.rotation.y);
+        const rotationZ = Matrix.CreateRotationZMatrix(this.rotation.z);
     
-        // Combine inverse transformations (reverse order for inverse)
-        return Matrix.Multiply(rotationX, Matrix.Multiply(rotationY, Matrix.Multiply(rotationZ, translation)));
+        const rotation = Matrix.Multiply(rotationZ, Matrix.Multiply(rotationY, rotationX));
+        const translation = Matrix.CreateTranslationMatrix(this.position.x, this.position.y, this.position.z);
+    
+        // First rotate, then translate
+        return Matrix.Multiply(rotation, translation);
     }
+    
 }
