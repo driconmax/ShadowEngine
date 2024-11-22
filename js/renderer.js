@@ -24,8 +24,8 @@ class Renderer extends ShadowScript {
         this.perspectiveMatrix = Matrix.CreatePerspectiveMatrix(fov, aspect, near, far)
     }
 
-    UpdateGraphics(graphics){
-        this.graphics = graphics;
+    UpdateMeshs(meshs){
+        this.meshs = meshs;
     }
 
     Draw(timestep){
@@ -36,23 +36,23 @@ class Renderer extends ShadowScript {
 
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            this.graphics.sort((a, b) => b.transformationMatrix[2][3] - a.transformationMatrix[2][3]);
-            this.graphics.forEach(graphic => {
-                const finalMatrix = Matrix.Multiply(viewProjectionMatrix, graphic.transformationMatrix);
-                const transformedVertices = graphic.vertices.map(vertex => 
+            this.meshs.sort((a, b) => b.transformationMatrix[2][3] - a.transformationMatrix[2][3]);
+            this.meshs.forEach(mesh => {
+                const finalMatrix = Matrix.Multiply(viewProjectionMatrix, mesh.transformationMatrix);
+                const transformedVertices = mesh.vertices.map(vertex => 
                     Matrix.MapToScreen(finalMatrix, vertex, this.canvas)
                 );
 
-                graphic.FinalDraw(this.ctx, transformedVertices, timestep);
+                mesh.FinalDraw(this.ctx, transformedVertices, timestep);
             });
         } else {
-            this.graphics.sort((a, b) => a.layer - b.layer);
+            this.meshs.sort((a, b) => a.layer - b.layer);
 
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     
-            this.graphics.forEach(graphic => {
-                const finalMatrix = Matrix.Multiply(viewMatrix, graphic.transformationMatrix);
-                graphic.Draw(this.ctx, finalMatrix, timestep);
+            this.meshs.forEach(mesh => {
+                const finalMatrix = Matrix.Multiply(viewMatrix, mesh.transformationMatrix);
+                mesh.Draw(this.ctx, finalMatrix, timestep);
             });
         }
     }

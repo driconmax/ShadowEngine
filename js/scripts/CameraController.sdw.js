@@ -22,7 +22,7 @@ class Room extends ShadowScript {
             0,
             -Math.cos(this.renderer.camera.rotation.y)
         );
-        console.log(forward);
+        
         const right = new Vector3(
             Math.cos(this.renderer.camera.rotation.y),
             0,

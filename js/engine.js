@@ -44,7 +44,6 @@ class Engine {
         addEventListener("keyup", (event) => {
             delete this.onKeyPress[event.code];
             this.onKeyPressUp[event.code] = true;
-            console.log("keyup", event.code);
         });
         //this.mainUpdate = setInterval();
 
@@ -83,22 +82,22 @@ class Engine {
     }
 
     mainDraw(){
-        const graphics = [];
+        const meshs = [];
 
         this.scripts.forEach(script => {
             script.sobjects.forEach(sobject => {
                 const sobjectMatrix = sobject.computeMatrix();
-                sobject.graphics.forEach(graphic => {
-                    graphic.transformationMatrix = sobjectMatrix;
+                sobject.meshs.forEach(mesh => {
+                    mesh.transformationMatrix = sobjectMatrix;
                 });
-                graphics.push(...sobject.graphics);
+                meshs.push(...sobject.meshs);
             });
-            graphics.push(...script.graphics);
+            meshs.push(...script.meshs);
         });
 
         var now = Date.now();
 
-        this.renderer.UpdateGraphics(graphics);
+        this.renderer.UpdateMeshs(meshs);
         this.renderer.Draw((now - this.lastDrawInterval) / 1000);
 
         this.lastDrawInterval = now;

@@ -18,19 +18,19 @@ class Body1 extends ShadowScript {
         this.circleObj.position.x = 100;
         this.circleObj.position.y = 100;
         this.circleObj.circle = new Circle(new Vector3(0, 0, 0), 3, -100);
-        this.circleObj.AddGraphic(this.circleObj.circle);
+        this.circleObj.AddMesh(this.circleObj.circle);
 
         this.squareObj = new SObject(new Vector3(0, 0));
         this.AddSObject(this.squareObj);
         this.squareObj.square = new Square(new Vector3(0, 0, 0), 20);
         this.squareObj.square.SetColor("#ff0000");
-        this.squareObj.AddGraphic(this.squareObj.square);
+        this.squareObj.AddMesh(this.squareObj.square);
 
         this.sideSquareObj = new SObject(new Vector3(0, 0), new Vector3(0, 0, 0));
         this.AddSObject(this.sideSquareObj);
         this.sideSquareObj.square = new Square(new Vector3(0, 0, 0), 20);
         this.sideSquareObj.square.SetColor("#00ff00");
-        this.sideSquareObj.AddGraphic(this.sideSquareObj.square);
+        this.sideSquareObj.AddMesh(this.sideSquareObj.square);
     }
 
     Update(timestep){

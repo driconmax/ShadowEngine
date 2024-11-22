@@ -1,0 +1,134 @@
+class Mesh {
+    /**
+     *
+     */
+    constructor(position, vertices = [], triangles = []) {
+        this.position = position;
+        this.layer = 0;
+        this.color = "#534857";
+        this.vertices = vertices;
+        this.triangles = triangles;
+        this.transformationMatrix = Matrix.CreateTranslationMatrix(0, 0, 0);
+    }
+
+    SetLayer(layer){
+        this.layer = layer;
+    }
+
+    SetColor(color){
+        this.color = color;
+    }
+
+    Draw(ctx, finalMatrix){
+
+        for (let i = 0; i < this.triangles.length; i += 3) {
+        
+            var vertex = this.vertices[this.triangles[i]];
+            var position = Matrix.TransformPoint(finalMatrix, vertex);
+
+            ctx.beginPath();
+            ctx.moveTo(
+                position.x,
+                position.y
+            );
+
+            vertex = this.vertices[this.triangles[i + 1]];
+            position = Matrix.TransformPoint(finalMatrix, vertex);
+            ctx.lineTo(
+                position.x,
+                position.y
+            );
+
+            vertex = this.vertices[this.triangles[i + 2]];
+            position = Matrix.TransformPoint(finalMatrix, vertex);
+            ctx.lineTo(
+                position.x,
+                position.y
+            );
+            
+            ctx.fillStyle = this.color;
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+
+    FinalDraw(ctx, transformedVertices) {
+
+        for (let i = 0; i < this.triangles.length; i += 3) {
+        
+            var vertex = transformedVertices[this.triangles[i]];
+
+            ctx.beginPath();
+            ctx.moveTo(
+                vertex.x,
+                vertex.y
+            );
+
+            vertex = transformedVertices[this.triangles[i + 1]];
+            ctx.lineTo(
+                vertex.x,
+                vertex.y
+            );
+
+            vertex = transformedVertices[this.triangles[i + 2]];
+            ctx.lineTo(
+                vertex.x,
+                vertex.y
+            );
+            
+            ctx.fillStyle = this.color;
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = "#000";
+            ctx.stroke();
+        }
+    }
+}
+
+class Circle extends Mesh {
+    /**
+     * 
+     * @param {Vector3} position 
+     * @param {Number} sides 
+     * @param {Number} radius 
+     */
+    constructor(position, sides, radius, startRotation = 0) {
+        super(position);
+        this.vertices = [];
+        
+        this.vertices.push(
+            new Vector3(
+                position.x +  radius * Math.cos(0 + startRotation),
+                position.y +  radius * Math.sin(0 + startRotation)
+            )
+        );
+        
+        for (var i = 1; i <= sides;i += 1) {
+            this.vertices.push(
+                new Vector3(
+                    position.x + radius * Math.cos(i * 2 * Math.PI / sides + startRotation),
+                    position.y + radius * Math.sin(i * 2 * Math.PI / sides + startRotation)
+                )
+            );
+        }
+
+    }
+    
+}
+
+class Square extends Mesh {
+    /**
+     *
+     */
+    constructor(position, size) {
+        const halfSize = size / 2;
+        const vertices = [
+            new Vector3(-halfSize, -halfSize, 0),
+            new Vector3(halfSize, -halfSize, 0),
+            new Vector3(halfSize, halfSize, 0),
+            new Vector3(-halfSize, halfSize, 0),
+        ];
+        const triangles = [0, 2, 1, 0, 3, 2];
+        super(position, vertices, triangles);
+    }
+}

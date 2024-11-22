@@ -8,9 +8,10 @@ class CameraController extends ShadowScript {
             new Vector3(50, 50, 0),   // Top-right
             new Vector3(-50, 50, 0)   // Top-left
         ];
-        const frontWallPolygon = new Polygon(new Vector3(0, 0, 0), frontWallVertices);
+        const frontWallTriangles = [0, 2, 1, 0, 3, 2];
+        const frontWallPolygon = new Mesh(new Vector3(0, 0, 0), frontWallVertices, frontWallTriangles);
         frontWallPolygon.SetColor("#FF0000"); // Red wall
-        this.frontWall.AddGraphic(frontWallPolygon);
+        this.frontWall.AddMesh(frontWallPolygon);
         this.AddSObject(this.frontWall);
 
         // Door Frame
@@ -21,9 +22,10 @@ class CameraController extends ShadowScript {
             new Vector3(20, 50, 0),
             new Vector3(-20, 50, 0)
         ];
-        const doorFramePolygon = new Polygon(new Vector3(0, 0, 0), doorFrameVertices);
+        const doorFrameTriangles = [0, 2, 1, 0, 3, 2];
+        const doorFramePolygon = new Mesh(new Vector3(0, 0, 0), doorFrameVertices, doorFrameTriangles);
         doorFramePolygon.SetColor("#00FF00"); // Green door frame
-        this.doorFrame.AddGraphic(doorFramePolygon);
+        this.doorFrame.AddMesh(doorFramePolygon);
         this.AddSObject(this.doorFrame);
 
         // Ceiling
@@ -34,9 +36,10 @@ class CameraController extends ShadowScript {
             new Vector3(50, 50, 0),
             new Vector3(-50, 50, 0)
         ];
-        const ceilingPolygon = new Polygon(new Vector3(0, 0, 0), ceilingVertices);
+        const ceilingTriangles = [0, 2, 1, 0, 3, 2];
+        const ceilingPolygon = new Mesh(new Vector3(0, 0, 0), ceilingVertices, ceilingTriangles);
         ceilingPolygon.SetColor("#0000FF"); // Blue ceiling
-        this.ceiling.AddGraphic(ceilingPolygon);
+        this.ceiling.AddMesh(ceilingPolygon);
         this.AddSObject(this.ceiling);
 
         // Side Wall (left)
@@ -47,9 +50,10 @@ class CameraController extends ShadowScript {
             new Vector3(50, 50, 0),
             new Vector3(-50, 50, 0)
         ];
-        const sideWallPolygon = new Polygon(new Vector3(0, 0, 0), sideWallVertices);
+        const sideWallTriangles = [0, 2, 1, 0, 3, 2];
+        const sideWallPolygon = new Mesh(new Vector3(0, 0, 0), sideWallVertices, sideWallTriangles);
         sideWallPolygon.SetColor("#FFFF00"); // Yellow side wall
-        this.sideWall.AddGraphic(sideWallPolygon);
+        this.sideWall.AddMesh(sideWallPolygon);
         this.AddSObject(this.sideWall);
     }
 
