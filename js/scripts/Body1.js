@@ -5,7 +5,7 @@ class Body1 extends ShadowScript {
     constructor() {
         super();
         this.img = new Image();
-        this.img.src = "../../image/grass.png"
+        this.img.src = "image/grass.png"
 
         this.x = 256;
         this.y = 256;
@@ -17,7 +17,7 @@ class Body1 extends ShadowScript {
         this.AddSObject(this.circleObj);
         this.circleObj.position.x = 100;
         this.circleObj.position.y = 100;
-        this.circleObj.circle = new Circle(new Vector3(0, 0, 0), 3, 100);
+        this.circleObj.circle = new Circle(new Vector3(0, 0, 0), 3, -100);
         this.circleObj.AddGraphic(this.circleObj.circle);
 
         this.squareObj = new SObject(new Vector3(0, 0));
@@ -37,17 +37,17 @@ class Body1 extends ShadowScript {
         
         //this.squareObj.rotation.z -= 1 * timestep;
         this.squareObj.rotation.y -= 1 * timestep;
-        this.squareObj.position.x += 10 * timestep;
+        //this.squareObj.position.x += 10 * timestep;
 
-        this.sideSquareObj.position.x += 500 * timestep;
+        //this.sideSquareObj.position.y += 5 * timestep;
 
         //this.circleObj.scale.x -= 0.1 * timestep;
         //this.circleObj.scale.y -= 0.1 * timestep;
-        this.circleObj.position.z += 10 * timestep;
+        //this.circleObj.position.z += 10 * timestep;
         this.circleObj.rotation.z += 1 * timestep;
 
         //this.renderer.camera.position.z = 0;
-        //this.renderer.camera.position.x += 10 * timestep;
+        this.renderer.camera.position.z += 1000 * timestep;
     }
 }
 

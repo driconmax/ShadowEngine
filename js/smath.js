@@ -156,7 +156,7 @@ class Matrix {
         const transformed = Matrix.TransformPointDivide(matrix, point);
         return {
             x: (transformed.x + 1) * 0.5 * canvas.width,
-            y: (1 - transformed.y) * 0.5 * canvas.height // Invert Y-axis
+            y: (transformed.y + 1) * 0.5 * canvas.height // Invert Y-axis
         };
     }
 }

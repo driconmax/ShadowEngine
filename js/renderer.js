@@ -4,7 +4,7 @@ class Renderer extends ShadowScript {
      */
     constructor(canvas, framerate, dimensions = 2) {
         super();
-        this.camera = new SObject(new Vector3(0, 0, -500));
+        this.camera = new SObject(new Vector3(0, 0, 500));
 
         this.canvas = canvas;
         this.ctx;
@@ -29,7 +29,7 @@ class Renderer extends ShadowScript {
     }
 
     Draw(timestep){
-        const viewMatrix = this.camera.computeInverseMatrix();
+        const viewMatrix = this.camera.computeMatrix();
         if(this.dimensions == 3){
             //3D Perspective Logic
             const viewProjectionMatrix = Matrix.Multiply(this.perspectiveMatrix, viewMatrix);
