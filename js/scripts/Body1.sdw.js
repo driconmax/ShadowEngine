@@ -13,12 +13,21 @@ class Body1 extends ShadowScript {
     }
 
     Create(){
-        this.circleObj = new SObject();
+        this.circleObj = new SObject(new Vector3(100, 0));
         this.AddSObject(this.circleObj);
-        this.circleObj.position.x = 100;
-        this.circleObj.position.y = 100;
-        this.circleObj.circle = new Circle(new Vector3(0, 0, 0), 3, -100);
+        this.circleObj.circle = new Circle(new Vector3(0, 0, 0), 3, 100);
         this.circleObj.AddMesh(this.circleObj.circle);
+        
+        this.circleObj1 = new SObject(new Vector3(300, 0));
+        this.AddSObject(this.circleObj1);
+        this.circleObj1.circle = new Circle(new Vector3(0, 0, 0), 8, 100);
+        this.circleObj1.AddMesh(this.circleObj1.circle);
+
+        this.circleObj2 = new SObject(new Vector3(500, 0));
+        this.AddSObject(this.circleObj2);
+        this.circleObj2.circle = new Circle(new Vector3(0, 0, 0), 16, 100);
+        this.circleObj2.AddMesh(this.circleObj2.circle);
+
 
         this.squareObj = new SObject(new Vector3(0, 0));
         this.AddSObject(this.squareObj);

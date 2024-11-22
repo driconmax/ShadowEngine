@@ -14,6 +14,7 @@ class Engine {
         this.mouse = {
             position: new Vector2(0, 0),
             velocity: new Vector2(0, 0),
+            wheelDelta: 0,
         }
 
         this.updaterate = Math.min(1, updaterate);
@@ -23,6 +24,10 @@ class Engine {
     }
 
     Start(){
+
+        this.canvas.addEventListener("wheel", (event) => {
+            this.mouse.wheelDelta = event.deltaY;
+        });
 
         this.canvas.addEventListener("mousemove", (event) => {
             //console.log(event);
@@ -121,5 +126,6 @@ class Engine {
         });
 
         this.lastUpdateInterval = now;
+        this.mouse.wheelDelta = 0;
     }
 }

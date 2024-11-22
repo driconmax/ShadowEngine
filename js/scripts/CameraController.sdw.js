@@ -7,6 +7,8 @@ class Room extends ShadowScript {
         super();
         this.rotationSpeed = 1;
         this.moveSpeed = 100;
+        this.runSpeed = 500;
+        this.zoomSpeed = .001;
     }
 
     Create() {
@@ -55,8 +57,12 @@ class Room extends ShadowScript {
         }
 
         // Apply movement to the camera's position
-        this.renderer.camera.position.x += moveDirection.x * this.moveSpeed * timestep;
-        this.renderer.camera.position.z += moveDirection.z * this.moveSpeed * timestep;
+        var speed = this.moveSpeed;
+        if(this.engine.onKeyPress["ShiftLeft"]){
+            speed = this.runSpeed;
+        }
+        this.renderer.camera.position.x += moveDirection.x * speed * timestep;
+        this.renderer.camera.position.z += moveDirection.z * speed * timestep;
 
         // Handle camera rotation with the mouse (horizontal rotation on Y-axis)
         if (this.engine.mouse && this.engine.mouse.position) {
@@ -65,6 +71,10 @@ class Room extends ShadowScript {
                 Math.PI / 2,
                 this.engine.mouse.position.x / 1000
             );
+        }
+
+        if(this.engine.mouse.wheelDelta != 0){
+            this.renderer.fov += this.engine.mouse.wheelDelta * this.zoomSpeed;
         }
     }
 }

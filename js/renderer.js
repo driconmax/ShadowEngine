@@ -17,11 +17,11 @@ class Renderer extends ShadowScript {
 
         this.ctx = this.canvas.getContext("2d");
         
-        const fov = Math.PI / 4; // 45 degrees in radians
-        const aspect = canvas.width / canvas.height;
-        const near = 0.1; // Near clipping plane
-        const far = 1000; // Far clipping plane
-        this.perspectiveMatrix = Matrix.CreatePerspectiveMatrix(fov, aspect, near, far)
+        this.fov = Math.PI / 4; // 45 degrees in radians
+        this.aspect = canvas.width / canvas.height;
+        this.near = 0.1; // Near clipping plane
+        this.far = 1000; // Far clipping plane
+        this.perspectiveMatrix = Matrix.CreatePerspectiveMatrix(this.fov, this.aspect, this.near, this.far);
     }
 
     UpdateMeshs(meshs){
@@ -29,6 +29,9 @@ class Renderer extends ShadowScript {
     }
 
     Draw(timestep){
+        this.fov = Math.min(Math.PI/2, this.fov);
+        this.fov = Math.max(.1, this.fov);
+        this.perspectiveMatrix = Matrix.CreatePerspectiveMatrix(this.fov, this.aspect, this.near, this.far);
         const viewMatrix = this.camera.computeInverseMatrix();
         if(this.dimensions == 3){
             //3D Perspective Logic

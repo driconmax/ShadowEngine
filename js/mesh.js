@@ -98,6 +98,13 @@ class Circle extends Mesh {
         
         this.vertices.push(
             new Vector3(
+                position.x,
+                position.y
+            )
+        );
+        
+        this.vertices.push(
+            new Vector3(
                 position.x +  radius * Math.cos(0 + startRotation),
                 position.y +  radius * Math.sin(0 + startRotation)
             )
@@ -111,6 +118,16 @@ class Circle extends Mesh {
                 )
             );
         }
+        
+        for (var i = 2; i <= sides; i += 1) {
+            this.triangles.push(0);
+            this.triangles.push(i);
+            this.triangles.push(i-1);
+        }
+
+        this.triangles.push(0);
+        this.triangles.push(1);
+        this.triangles.push(sides);
 
     }
     
