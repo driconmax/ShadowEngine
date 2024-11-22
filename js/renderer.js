@@ -36,6 +36,7 @@ class Renderer extends ShadowScript {
 
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+            this.graphics.sort((a, b) => b.transformationMatrix[2][3] - a.transformationMatrix[2][3]);
             this.graphics.forEach(graphic => {
                 const finalMatrix = Matrix.Multiply(viewProjectionMatrix, graphic.transformationMatrix);
                 const transformedVertices = graphic.vertices.map(vertex => 

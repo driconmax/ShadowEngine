@@ -1,0 +1,14 @@
+/* main.css */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* Prevents scrolling */
+}
+
+canvas {
+    display: block; /* Removes the small gap below canvas in some browsers */
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    background-color: #555; /* Ensures background color stays consistent */
+}

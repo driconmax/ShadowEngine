@@ -3,30 +3,48 @@ class Engine {
      *
      */
     constructor(canvas, framerate, updaterate = 30) {        
-        this.renderer = new Renderer(canvas, framerate, 3);
+        this.canvas = canvas;
+        this.renderer = new Renderer(this.canvas, framerate, 3);
         this.objs = [];
         this.scripts = [];
         this.onKeyPressDown = {};
         this.onKeyPress = {};
         this.onKeyPressUp = {};
         this.onKeyPressUpDelete = {};
+        this.mouse = {
+            position: new Vector2(0, 0),
+            velocity: new Vector2(0, 0),
+        }
+
         this.updaterate = Math.min(1, updaterate);
         this.updaterate = updaterate;
+
         
     }
 
     Start(){
 
-        addEventListener("keydown", (event) => {
-            this.onKeyPressDown[event.code] = true;
+        this.canvas.addEventListener("mousemove", (event) => {
+            //console.log(event);
+            var rect = this.canvas.getBoundingClientRect();
+            var pos = new Vector2(event.clientX - rect.left, event.clientY - rect.top);
+            this.mouse.position.x = pos.x;
+            this.mouse.position.y = pos.y;
         });
-        addEventListener("press", (event) => {
-            delete this.onKeyPressDown[event.code];
-            this.onKeyPress[event.code] = true;
+
+        addEventListener("keydown", (event) => {
+            if(this.onKeyPressDown[event.code] || this.onKeyPress[event.code]){
+                delete this.onKeyPressDown[event.code];
+                this.onKeyPress[event.code] = true;
+            } else {
+                this.onKeyPressDown[event.code] = true;
+                this.onKeyPress[event.code] = true;
+            }
         });
         addEventListener("keyup", (event) => {
             delete this.onKeyPress[event.code];
             this.onKeyPressUp[event.code] = true;
+            console.log("keyup", event.code);
         });
         //this.mainUpdate = setInterval();
 

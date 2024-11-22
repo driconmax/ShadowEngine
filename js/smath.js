@@ -44,6 +44,14 @@ class Quaternion extends Vector4 {
     }
 }
 
+class SMath {
+
+    static Lerp( a, b, t ) {
+        return a + t * ( b - a);
+    }
+}
+
+
 class Matrix {
 
     static CreateTranslationMatrix = (tx, ty, tz) => {
