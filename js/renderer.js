@@ -18,11 +18,14 @@ class Renderer extends ShadowScript {
     }
 
     Draw(timestep){
+        const cameraMatrix = this.camera.computeMatrix();
+
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.graphics.sort((a, b) => a.layer - b.layer);
         this.graphics.forEach(graphic => {
-            graphic.Draw(this.ctx, this.camera.position, this.camera.rotation, this.camera.scale, timestep);
+            const finalMatrix = Matrix.Multiply(cameraMatrix, graphic.transformationMatrix);
+            graphic.Draw(this.ctx, finalMatrix, timestep);
         });
     }
 }

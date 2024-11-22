@@ -4,6 +4,7 @@ class ShadowScript {
      */
     constructor() {
         this.graphics = [];
+        this.sobjects = [];
         this.engine;
     }
 
@@ -25,7 +26,10 @@ class ShadowScript {
 
     AddGraphic(graphic){
         this.graphics.push(graphic);
+    }
 
+    AddSObject(sobject){
+        this.sobjects.push(sobject);
     }
 
 

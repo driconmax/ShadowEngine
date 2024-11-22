@@ -67,6 +67,13 @@ class Engine {
         const graphics = [];
 
         this.scripts.forEach(script => {
+            script.sobjects.forEach(sobject => {
+                const sobjectMatrix = sobject.computeMatrix();
+                sobject.graphics.forEach(graphic => {
+                    graphic.transformationMatrix = sobjectMatrix;
+                });
+                graphics.push(...sobject.graphics);
+            });
             graphics.push(...script.graphics);
         });
 
