@@ -18,7 +18,8 @@ class Renderer extends ShadowScript {
         this.ctx = this.canvas.getContext("2d");
         
         this.fov = Math.PI / 4; // 45 degrees in radians
-        this.aspect = canvas.width / canvas.height;
+        var rect = canvas.getBoundingClientRect();
+        this.aspect = rect.width / rect.height;
         this.near = 0.1; // Near clipping plane
         this.far = 1000; // Far clipping plane
         this.perspectiveMatrix = Matrix.CreatePerspectiveMatrix(this.fov, this.aspect, this.near, this.far);
@@ -29,6 +30,8 @@ class Renderer extends ShadowScript {
     }
 
     Draw(timestep){
+        var rect = canvas.getBoundingClientRect();
+        this.aspect = rect.width / rect.height;
         this.fov = Math.min(Math.PI/2, this.fov);
         this.fov = Math.max(.1, this.fov);
         this.perspectiveMatrix = Matrix.CreatePerspectiveMatrix(this.fov, this.aspect, this.near, this.far);
