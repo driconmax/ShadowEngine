@@ -93,7 +93,7 @@ class Renderer extends ShadowScript {
 
                     // In front Objects
                     const dotForwardObjects = forwardVector.x * dir.x + forwardVector.y * dir.y + forwardVector.z * dir.z;
-                    if (dotForwardObjects < Math.cos(this.fov / 2)) {
+                    if (dotForwardObjects < Math.cos(this.fov)) {
                         // Skip rendering this triangle
                         continue; 
                     }
@@ -151,8 +151,10 @@ class Renderer extends ShadowScript {
             this.ctx.fillText("Cam X: " + this.camera.position.x,10,10);
             this.ctx.fillText("Cam Y: " + this.camera.position.y,10,30);
             this.ctx.fillText("Cam Z: " + this.camera.position.z,10,50);
+
+            this.ctx.fillText("Triangles: " + renderArr.length,10,70);
             
-            this.ctx.fillText("FPS: " + 1/timestep,10,70);
+            this.ctx.fillText("FPS: " + 1/timestep,10,90);
         } else {
             this.meshes.sort((a, b) => a.layer - b.layer);
 

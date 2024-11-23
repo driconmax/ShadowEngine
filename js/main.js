@@ -8,5 +8,6 @@ window.onload = () => {
     engine.AddScript("js/scripts/Room.sdw.js");
     engine.AddScript("js/scripts/CameraController.sdw.js");
     engine.AddScript("js/scripts/House.sdw.js");
+    engine.AddScript("js/scripts/Suzanne.sdw.js");
     engine.Start();
 }
