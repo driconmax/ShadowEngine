@@ -93,7 +93,7 @@ class Renderer extends ShadowScript {
 
                     // In front Objects
                     const dotForwardObjects = forwardVector.x * dir.x + forwardVector.y * dir.y + forwardVector.z * dir.z;
-                    if (dotForwardObjects < 0.1) {
+                    if (dotForwardObjects < Math.cos(this.fov / 2)) {
                         // Skip rendering this triangle
                         continue; 
                     }
@@ -147,6 +147,7 @@ class Renderer extends ShadowScript {
             
 
             this.ctx.font = "10px Arial";
+            this.ctx.fillStyle = "#00DD00";
             this.ctx.fillText("Cam X: " + this.camera.position.x,10,10);
             this.ctx.fillText("Cam Y: " + this.camera.position.y,10,30);
             this.ctx.fillText("Cam Z: " + this.camera.position.z,10,50);

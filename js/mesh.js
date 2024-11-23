@@ -106,6 +106,7 @@ class Mesh {
         ctx.fillStyle = this.color;
         ctx.closePath();
         ctx.fill();
+
         ctx.fillStyle = "#000";
         ctx.stroke();
     }
