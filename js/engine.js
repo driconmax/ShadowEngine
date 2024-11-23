@@ -24,17 +24,21 @@ class Engine {
     }
 
     Start(){
+        
+        this.canvas.addEventListener("click", async () => {
+            await this.canvas.requestPointerLock({
+                unadjustedMovement: true,
+            });
+        });
 
         this.canvas.addEventListener("wheel", (event) => {
             this.mouse.wheelDelta = event.deltaY;
         });
 
-        this.canvas.addEventListener("mousemove", (event) => {
-            //console.log(event);
-            var rect = this.canvas.getBoundingClientRect();
-            var pos = new Vector2(event.clientX - rect.left, event.clientY - rect.top);
-            this.mouse.position.x = pos.x;
-            this.mouse.position.y = pos.y;
+        document.addEventListener("mousemove", (event) => {
+            this.mouse.position.x += event.movementX;
+            this.mouse.position.y += event.movementY;
+            //LockStatus: (document.pointerLockElement === this.canvas)
         });
 
         addEventListener("keydown", (event) => {
