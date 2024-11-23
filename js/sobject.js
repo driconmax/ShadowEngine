@@ -28,7 +28,7 @@ class SObject extends ShadowScript {
         const rotationZ = Matrix.CreateRotationZMatrix(this.rotation.z);
     
         const rotation = Matrix.Multiply(rotationZ, Matrix.Multiply(rotationY, rotationX));
-        const translation = Matrix.CreateTranslationMatrix(this.position.x, this.position.y, this.position.z);
+        const translation = Matrix.CreateTranslationMatrix(-this.position.x, -this.position.y, -this.position.z);
     
         // First rotate, then translate
         return Matrix.Multiply(rotation, translation);

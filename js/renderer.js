@@ -45,12 +45,13 @@ class Renderer extends ShadowScript {
         );
 
         if(this.dimensions == 3){
+
             //3D Perspective Logic
             const viewProjectionMatrix = Matrix.Multiply(this.perspectiveMatrix, viewMatrix);
 
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            this.meshes.sort((a, b) => b.transformationMatrix[2][3] - a.transformationMatrix[2][3]);
+            this.meshes.sort((a, b) => a.transformationMatrix[2][3] - b.transformationMatrix[2][3]);
             this.meshes.forEach(mesh => {
                 const finalMatrix = Matrix.Multiply(viewProjectionMatrix, mesh.transformationMatrix);
                 const transformedVertices = mesh.vertices.map(vertex => 
@@ -63,21 +64,35 @@ class Renderer extends ShadowScript {
                     const v1 = mesh.vertices[mesh.triangles[i + 1]];
                     const v2 = mesh.vertices[mesh.triangles[i + 2]];
 
+                    const pV0 = Matrix.TransformPoint(mesh.transformationMatrix, v0);
+                    const pV1 = Matrix.TransformPoint(mesh.transformationMatrix, v1);
+                    const pV2 = Matrix.TransformPoint(mesh.transformationMatrix, v2);
+
                     const tV0 = transformedVertices[mesh.triangles[i]];
                     const tV1 = transformedVertices[mesh.triangles[i + 1]];
                     const tV2 = transformedVertices[mesh.triangles[i + 2]];
 
-                    var center = SMath.GetTriangleCenter(v0, v1, v2);
-                    var normal = SMath.GetTriangleNormal(v0, v1, v2);
+
+                    var tCenter = SMath.GetTriangleCenter(pV0, pV1, pV2);
+                    var normal = SMath.GetTriangleNormal(pV0, pV1, pV2);
+                    const dir = SMath.GetDirection(this.camera.position, tCenter);
+                    //console.log(dir);
 
                     // Compute dot product with camera forward vector
-                    const dot = normal.x * forwardVector.x + normal.y * forwardVector.y + normal.z * forwardVector.z;
-                    if (dot < 0) {
+                    const dot = normal.x * dir.x + normal.y * dir.y + normal.z * dir.z;
+                    if (dot > 0) {
                         // Skip rendering this triangle
                         continue; 
                     }
+
+                    // Compute dot product with camera forward vector
+                    /*const dotForwardObjects = forwardVector.x * dir.x + forwardVector.y * dir.y + forwardVector.z * dir.z;
+                    if (dotForwardObjects < 0) {
+                        // Skip rendering this triangle
+                        continue; 
+                    }*/
                     
-                    var relativePosition = new Vector3(
+                    /*var relativePosition = new Vector3(
                         v0.x - this.camera.position.x,
                         v0.y - this.camera.position.y,
                         v0.z - this.camera.position.z,
@@ -86,12 +101,15 @@ class Renderer extends ShadowScript {
                     if (dot2 < 0) {
                         // Skip rendering this triangle
                         continue; 
-                    }
+                    }*/
                     // Transform triangle vertices and render if visible
                     //mesh.FinalDraw(this.ctx, transformedVertices, timestep);
                     mesh.DrawTriangle(this.ctx, tV0, tV1, tV2);
 
                     // Draw Triangle Normal
+
+                    var center = SMath.GetTriangleCenter(v0, v1, v2);
+                    var normal = SMath.GetTriangleNormal(v0, v1, v2);
                     var mappedCenter = Matrix.MapToScreen(finalMatrix, center, this.canvas)
                     var endPoint = new Vector3(
                         center.x + normal.x * 10,
@@ -102,6 +120,12 @@ class Renderer extends ShadowScript {
                     mesh.DrawLine(this.ctx, mappedCenter, mappedEndPoint);
                 }
             });
+            
+
+            this.ctx.font = "10px Arial";
+            this.ctx.fillText("Cam X: " + this.camera.position.x,10,10);
+            this.ctx.fillText("Cam Y: " + this.camera.position.y,10,30);
+            this.ctx.fillText("Cam Z: " + this.camera.position.z,10,50);
         } else {
             this.meshes.sort((a, b) => a.layer - b.layer);
 

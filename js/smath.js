@@ -78,6 +78,31 @@ class SMath {
             (v0.z + v1.z + v2.z)/3
         );
     }
+
+    static GetDistance(a, b){
+        return new Vector3(
+            b.x - a.x,
+            b.y - a.y,
+            b.z - a.z,
+        );
+    }
+
+    static GetDirection(a, b){
+        return this.NormalizeVector(this.GetDistance(a, b));
+    }
+
+    static NormalizeVector(v){
+        var nV = new Vector3(v.x, v.y, v.z);
+
+        const magnitude = Math.sqrt(nV.x ** 2 + nV.y ** 2 + nV.z ** 2);
+        if (magnitude > 0) {
+            nV.x /= magnitude;
+            nV.y /= magnitude;
+            nV.z /= magnitude;
+        }
+
+        return nV;
+    }
 }
 
 
@@ -179,12 +204,12 @@ class Matrix {
 
     static CreatePerspectiveMatrix = (fov, aspect, near, far) => {
         const f = 1 / Math.tan(fov / 2);
-        const rangeInv = 1 / (near - far);
+        const rangeInv = 1 / (far - near);
     
         return [
             [f / aspect, 0, 0, 0],
             [0, f, 0, 0],
-            [0, 0, (far + near) * rangeInv, 2 * far * near * rangeInv],
+            [0, 0, -(far + near) * rangeInv, (2 * far * near) * rangeInv],
             [0, 0, -1, 0]
         ];
     };

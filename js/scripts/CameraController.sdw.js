@@ -1,4 +1,4 @@
-class Room extends ShadowScript {
+class CameraController extends ShadowScript {
 
     /**
      *
@@ -79,4 +79,4 @@ class Room extends ShadowScript {
     }
 }
 
-engine.registerScript(Room);
+engine.registerScript(CameraController);

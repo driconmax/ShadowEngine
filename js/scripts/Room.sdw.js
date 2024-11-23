@@ -1,4 +1,4 @@
-class CameraController extends ShadowScript {
+class Room extends ShadowScript {
     Create() {
         // Wall (front)
         this.frontWall = new SObject(new Vector3(0, 0, -250));
@@ -15,7 +15,7 @@ class CameraController extends ShadowScript {
         this.AddSObject(this.frontWall);
 
         // Door Frame
-        this.doorFrame = new SObject(new Vector3(0, 0, -150));
+        this.doorFrame = new SObject(new Vector3(0, 0, 150));
         const doorFrameVertices = [
             new Vector3(-20, -50, 0),
             new Vector3(20, -50, 0),
@@ -28,6 +28,7 @@ class CameraController extends ShadowScript {
         this.doorFrame.AddMesh(doorFramePolygon);
         this.AddSObject(this.doorFrame);
 
+        /*
         // Ceiling
         this.ceiling = new SObject(new Vector3(0, 50, -200), new Vector3(-Math.PI / 2, 0, 0));
         const ceilingVertices = [
@@ -55,6 +56,7 @@ class CameraController extends ShadowScript {
         sideWallPolygon.SetColor("#FFFF00"); // Yellow side wall
         this.sideWall.AddMesh(sideWallPolygon);
         this.AddSObject(this.sideWall);
+        */
     }
 
     Update(timestep) {
@@ -63,4 +65,4 @@ class CameraController extends ShadowScript {
     }
 }
 
-engine.registerScript(CameraController);
+engine.registerScript(Room);
