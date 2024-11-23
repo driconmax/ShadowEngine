@@ -91,6 +91,9 @@ class Engine {
     }
 
     mainDraw(){
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+
         const meshes = [];
 
         this.scripts.forEach(script => {

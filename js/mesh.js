@@ -2,12 +2,13 @@ class Mesh {
     /**
      *
      */
-    constructor(position, vertices = [], triangles = []) {
+    constructor(position, vertices = [], triangles = [], backfaceCulling = true) {
         this.position = position;
         this.layer = 0;
         this.color = "#534857";
         this.vertices = vertices;
         this.triangles = triangles;
+        this.backfaceCulling = backfaceCulling;
         this.transformationMatrix = Matrix.CreateTranslationMatrix(0, 0, 0);
     }
 

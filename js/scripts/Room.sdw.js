@@ -28,7 +28,6 @@ class Room extends ShadowScript {
         this.doorFrame.AddMesh(doorFramePolygon);
         this.AddSObject(this.doorFrame);
 
-        /*
         // Ceiling
         this.ceiling = new SObject(new Vector3(0, 50, -200), new Vector3(-Math.PI / 2, 0, 0));
         const ceilingVertices = [
@@ -56,7 +55,6 @@ class Room extends ShadowScript {
         sideWallPolygon.SetColor("#FFFF00"); // Yellow side wall
         this.sideWall.AddMesh(sideWallPolygon);
         this.AddSObject(this.sideWall);
-        */
     }
 
     Update(timestep) {

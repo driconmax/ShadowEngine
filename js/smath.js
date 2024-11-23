@@ -79,6 +79,10 @@ class SMath {
         );
     }
 
+    static GetMagnitude(v){
+        return Math.sqrt(v.x ** 2 + v.y ** 2 + v.z ** 2);
+    }
+
     static GetDistance(a, b){
         return new Vector3(
             b.x - a.x,
@@ -94,7 +98,7 @@ class SMath {
     static NormalizeVector(v){
         var nV = new Vector3(v.x, v.y, v.z);
 
-        const magnitude = Math.sqrt(nV.x ** 2 + nV.y ** 2 + nV.z ** 2);
+        const magnitude = this.GetMagnitude(nV);
         if (magnitude > 0) {
             nV.x /= magnitude;
             nV.y /= magnitude;
