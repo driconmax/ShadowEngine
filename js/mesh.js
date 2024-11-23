@@ -125,6 +125,30 @@ class Mesh {
         ctx.fillStyle = "#000";
         ctx.stroke();
     }
+
+    static ParseOBJ(fileContent) {
+        const lines = fileContent.split("\n");
+        const vertices = [];
+        const triangles = [];
+    
+        for (const line of lines) {
+            const parts = line.trim().split(" ");
+            if (parts[0] === "v") {
+                // Parse vertex
+                const x = parseFloat(parts[1]);
+                const y = parseFloat(parts[2]);
+                const z = parseFloat(parts[3]);
+                vertices.push(new Vector3(x, y, z));
+            } else if (parts[0] === "f") {
+                // Parse face
+                const v1 = parseInt(parts[1]) - 1; // Convert to 0-based index
+                const v2 = parseInt(parts[2]) - 1;
+                const v3 = parseInt(parts[3]) - 1;
+                triangles.push(v1, v2, v3);
+            }
+        }
+        return new Mesh(new Vector3(0,0,0), vertices, triangles);
+    }
 }
 
 class Circle extends Mesh {

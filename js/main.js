@@ -7,5 +7,6 @@ window.onload = () => {
     //engine.AddScript("js/scripts/Body1.sdw.js");
     engine.AddScript("js/scripts/Room.sdw.js");
     engine.AddScript("js/scripts/CameraController.sdw.js");
+    engine.AddScript("js/scripts/House.sdw.js");
     engine.Start();
 }

@@ -90,6 +90,20 @@ class Engine {
         }
     }
 
+    loadOBJ(url) {
+        return new Promise((resolve, reject) => {
+            fetch(url).then((response) => {
+                if (!response.ok) {
+                    reject(`Failed to load OBJ file: ${response.statusText}`);
+                }
+                response.text().then((text) => {
+                    resolve(text);
+                })
+            })
+        });
+    }
+    
+
     mainDraw(){
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;

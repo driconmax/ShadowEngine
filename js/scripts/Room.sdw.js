@@ -58,7 +58,6 @@ class Room extends ShadowScript {
     }
 
     Update(timestep) {
-        // Optional: Rotate camera for a dynamic view
         //this.renderer.camera.rotation.y += 0.1 * timestep;
     }
 }
