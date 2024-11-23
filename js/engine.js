@@ -91,22 +91,22 @@ class Engine {
     }
 
     mainDraw(){
-        const meshs = [];
+        const meshes = [];
 
         this.scripts.forEach(script => {
             script.sobjects.forEach(sobject => {
                 const sobjectMatrix = sobject.computeMatrix();
-                sobject.meshs.forEach(mesh => {
+                sobject.meshes.forEach(mesh => {
                     mesh.transformationMatrix = sobjectMatrix;
                 });
-                meshs.push(...sobject.meshs);
+                meshes.push(...sobject.meshes);
             });
-            meshs.push(...script.meshs);
+            meshes.push(...script.meshes);
         });
 
         var now = Date.now();
 
-        this.renderer.UpdateMeshs(meshs);
+        this.renderer.UpdateMeshes(meshes);
         this.renderer.Draw((now - this.lastDrawInterval) / 1000);
 
         this.lastDrawInterval = now;

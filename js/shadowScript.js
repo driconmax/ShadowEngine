@@ -3,7 +3,7 @@ class ShadowScript {
      *
      */
     constructor() {
-        this.meshs = [];
+        this.meshes = [];
         this.sobjects = [];
         this.engine;
         this.renderer;
@@ -31,7 +31,7 @@ class ShadowScript {
     }
 
     AddMesh(mesh){
-        this.meshs.push(mesh);
+        this.meshes.push(mesh);
     }
 
     AddSObject(sobject){

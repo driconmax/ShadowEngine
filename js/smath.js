@@ -49,6 +49,35 @@ class SMath {
     static Lerp( a, b, t ) {
         return a + t * ( b - a);
     }
+
+    static GetTriangleNormal(v0, v1, v2){
+        // Calculate triangle normal
+        const edge1 = new Vector3(v1.x - v0.x, v1.y - v0.y, v1.z - v0.z);
+        const edge2 = new Vector3(v2.x - v0.x, v2.y - v0.y, v2.z - v0.z);
+        const normal = new Vector3(
+            edge1.y * edge2.z - edge1.z * edge2.y,
+            edge1.z * edge2.x - edge1.x * edge2.z,
+            edge1.x * edge2.y - edge1.y * edge2.x
+        );
+
+        // Normalize the normal vector
+        const magnitude = Math.sqrt(normal.x ** 2 + normal.y ** 2 + normal.z ** 2);
+        if (magnitude > 0) {
+            normal.x /= magnitude;
+            normal.y /= magnitude;
+            normal.z /= magnitude;
+        }
+
+        return normal;
+    }
+
+    static GetTriangleCenter(v0, v1, v2){
+        return new Vector3(
+            (v0.x + v1.x + v2.x)/3,
+            (v0.y + v1.y + v2.y)/3,
+            (v0.z + v1.z + v2.z)/3
+        );
+    }
 }
 
 

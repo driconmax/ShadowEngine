@@ -56,24 +56,24 @@ class Mesh {
 
         for (let i = 0; i < this.triangles.length; i += 3) {
         
-            var vertex = transformedVertices[this.triangles[i]];
+            var v0 = transformedVertices[this.triangles[i]];
+            var v1 = transformedVertices[this.triangles[i + 1]];
+            var v2 = transformedVertices[this.triangles[i + 2]];
 
             ctx.beginPath();
             ctx.moveTo(
-                vertex.x,
-                vertex.y
+                v0.x,
+                v0.y
+            );
+            
+            ctx.lineTo(
+                v1.x,
+                v1.y
             );
 
-            vertex = transformedVertices[this.triangles[i + 1]];
             ctx.lineTo(
-                vertex.x,
-                vertex.y
-            );
-
-            vertex = transformedVertices[this.triangles[i + 2]];
-            ctx.lineTo(
-                vertex.x,
-                vertex.y
+                v2.x,
+                v2.y
             );
             
             ctx.fillStyle = this.color;
@@ -82,6 +82,47 @@ class Mesh {
             ctx.fillStyle = "#000";
             ctx.stroke();
         }
+
+    }
+
+    DrawTriangle(ctx, v0, v1, v2){
+        ctx.beginPath();
+        ctx.moveTo(
+            v0.x,
+            v0.y
+        );
+        
+        ctx.lineTo(
+            v1.x,
+            v1.y
+        );
+
+        ctx.lineTo(
+            v2.x,
+            v2.y
+        );
+        
+        ctx.fillStyle = this.color;
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = "#000";
+        ctx.stroke();
+    }
+
+    DrawLine(ctx, a, b){
+        ctx.beginPath();
+        ctx.moveTo(
+            a.x,
+            a.y
+        );
+        
+        ctx.lineTo(
+            b.x,
+            b.y
+        );
+        //ctx.closePath();
+        ctx.fillStyle = "#000";
+        ctx.stroke();
     }
 }
 
