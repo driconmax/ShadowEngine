@@ -107,6 +107,102 @@ class SMath {
 
         return nV;
     }
+
+    static Dot(a, b){
+        return a.x * b.x + a.y * b.y + a.z * b.z;
+    }
+}
+
+class Color {
+
+    /**
+     *
+     */
+    constructor(r = 255, g = 255, b = 255, a = 0) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
+
+    fac(){
+        return new Color(this.r/255, this.g/255, this.b/255, this.a/255);
+    }
+
+    hex(){
+        return Color.ColorToHex(this);
+    }
+
+    static MultiplyColorsIntensity(hex1, hex2, intensity) {
+        
+        let c1 = this.HexToColor(hex1);
+        let c2 = this.HexToColor(hex2);
+        let color = new Color();
+    
+        // Adjust luminosity based on intensity
+        color.r = Math.round(Math.min(255, (c1.fac().r * c2.fac().r * intensity) * 255));
+        color.g = Math.round(Math.min(255, (c1.fac().g * c2.fac().g * intensity) * 255));
+        color.b = Math.round(Math.min(255, (c1.fac().b * c2.fac().b * intensity) * 255));
+    
+        // Convert back to hex and pad with 0 if needed
+        return this.ColorToHex(color);
+    }
+
+    static MultiplyColors(hex1, hex2) {
+        
+        let c1 = this.HexToColor(hex1);
+        let c2 = this.HexToColor(hex2);
+        let color = new Color();
+    
+        // Adjust luminosity based on intensity
+        color.r = Math.round(Math.min(255, c1.r * c2.r));
+        color.g = Math.round(Math.min(255, c1.g * c2.g));
+        color.b = Math.round(Math.min(255, c1.b * c2.b));
+    
+        // Convert back to hex and pad with 0 if needed
+        return this.ColorToHex(color);
+    }
+
+    static AdjustColorLuminosity(hex, intensity) {
+        let color = this.HexToColor(hex);
+    
+        // Clamp intensity to ensure valid calculations
+        intensity = Math.max(0, intensity); 
+    
+        // Adjust luminosity based on intensity
+        color.r = Math.round(Math.min(255, color.r * intensity));
+        color.g = Math.round(Math.min(255, color.g * intensity));
+        color.b = Math.round(Math.min(255, color.b * intensity));
+        
+        return this.ColorToHex(color);
+    }
+
+    static GetRandomColor(){
+        return new Color(
+            Math.floor(Math.random()*255),
+            Math.floor(Math.random()*255),
+            Math.floor(Math.random()*255),
+        );
+    }
+
+    static HexToColor(hex){
+        // Ensure the hex starts with #
+        if (!hex.startsWith("#")) {
+            throw new Error("Invalid hex color. Hex color must start with #.");
+        }
+        
+        // Remove the # and parse RGB components
+        let r = parseInt(hex.slice(1, 3), 16);
+        let g = parseInt(hex.slice(3, 5), 16);
+        let b = parseInt(hex.slice(5, 7), 16);
+
+        return new Color(r,g,b);
+    }
+
+    static ColorToHex(color){
+        const toHex = (value) => value.toString(16).padStart(2, "0");
+        return `#${toHex(color.r)}${toHex(color.g)}${toHex(color.b)}`;
+    }
 }
 
 

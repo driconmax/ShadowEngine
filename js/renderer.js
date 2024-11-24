@@ -5,6 +5,7 @@ class Renderer extends ShadowScript {
     constructor(canvas, framerate, dimensions = 2) {
         super();
         this.camera = new SObject(new Vector3(0, 0, 500));
+        this.light = new Light(new Vector3(0, 0, 0));
 
         this.canvas = canvas;
         this.ctx;
@@ -38,10 +39,16 @@ class Renderer extends ShadowScript {
         const viewMatrix = this.camera.computeInverseMatrix();
 
         // Compute the camera's forward vector
-        const forwardVector = new Vector3(
+        const cameraForward = new Vector3(
             Math.sin(this.camera.rotation.y),
             0,
             -Math.cos(this.camera.rotation.y)
+        );
+
+        const lightForward = new Vector3(
+            Math.sin(this.light.transform.rotation.y),
+            0,
+            -Math.cos(this.light.transform.rotation.y)
         );
 
         if(this.dimensions == 3){
@@ -84,7 +91,7 @@ class Renderer extends ShadowScript {
 
                     if(!mesh.backfaceCulling){
                         // Backface culling
-                        const dot = normal.x * dir.x + normal.y * dir.y + normal.z * dir.z;
+                        const dot = SMath.Dot(normal, dir);
                         if (dot > 0) {
                             // Skip rendering this triangle
                             continue; 
@@ -92,10 +99,17 @@ class Renderer extends ShadowScript {
                     }
 
                     // In front Objects
-                    const dotForwardObjects = forwardVector.x * dir.x + forwardVector.y * dir.y + forwardVector.z * dir.z;
+                    const dotForwardObjects = SMath.Dot(cameraForward, dir);
                     if (dotForwardObjects < Math.cos(this.fov)) {
                         // Skip rendering this triangle
                         continue; 
+                    }
+
+                    var lightIntensity = 0;
+                    var lightColor = this.light.color; 
+                    const lightDot = SMath.Dot(lightForward, normal);
+                    if(lightDot > 0){
+                        lightIntensity += this.light.intensity * lightDot;
                     }
 
                     renderArr.push({
@@ -106,6 +120,8 @@ class Renderer extends ShadowScript {
                            v2: tV2, 
                         },
                         dist: dist,
+                        light: lightIntensity,
+                        color: lightColor
                     });
                     
                     /*var relativePosition = new Vector3(
@@ -113,7 +129,7 @@ class Renderer extends ShadowScript {
                         v0.y - this.camera.position.y,
                         v0.z - this.camera.position.z,
                     );
-                    const dot2 = relativePosition.x * forwardVector.x + relativePosition.y * forwardVector.y + relativePosition.z * forwardVector.z;
+                    const dot2 = relativePosition.x * cameraForward.x + relativePosition.y * cameraForward.y + relativePosition.z * cameraForward.z;
                     if (dot2 < 0) {
                         // Skip rendering this triangle
                         continue; 
@@ -142,7 +158,12 @@ class Renderer extends ShadowScript {
             for (let i = 0; i < renderArr.length; i++) {
                 const element = renderArr[i];
                 
-                element.mesh.DrawTriangle(this.ctx, element.triangle.v0, element.triangle.v1, element.triangle.v2);
+                element.mesh.DrawTriangle(
+                    this.ctx,
+                    element.triangle.v0, element.triangle.v1, element.triangle.v2,
+                    element.light,
+                    element.color,
+                );
             }
             
 

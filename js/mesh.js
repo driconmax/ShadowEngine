@@ -2,7 +2,7 @@ class Mesh {
     /**
      *
      */
-    constructor(position, vertices = [], triangles = [], backfaceCulling = true) {
+    constructor(position, vertices = [], triangles = [], backfaceCulling = false) {
         this.position = position;
         this.layer = 0;
         this.color = "#534857";
@@ -53,40 +53,7 @@ class Mesh {
         }
     }
 
-    FinalDraw(ctx, transformedVertices) {
-
-        for (let i = 0; i < this.triangles.length; i += 3) {
-        
-            var v0 = transformedVertices[this.triangles[i]];
-            var v1 = transformedVertices[this.triangles[i + 1]];
-            var v2 = transformedVertices[this.triangles[i + 2]];
-
-            ctx.beginPath();
-            ctx.moveTo(
-                v0.x,
-                v0.y
-            );
-            
-            ctx.lineTo(
-                v1.x,
-                v1.y
-            );
-
-            ctx.lineTo(
-                v2.x,
-                v2.y
-            );
-            
-            ctx.fillStyle = this.color;
-            ctx.closePath();
-            ctx.fill();
-            ctx.fillStyle = "#000";
-            ctx.stroke();
-        }
-
-    }
-
-    DrawTriangle(ctx, v0, v1, v2){
+    DrawTriangle(ctx, v0, v1, v2, lightIntensity = 1, lightColor = "#FFFFFF"){
         ctx.beginPath();
         ctx.moveTo(
             v0.x,
@@ -103,7 +70,8 @@ class Mesh {
             v2.y
         );
         
-        ctx.fillStyle = this.color;
+        ctx.fillStyle = Color.MultiplyColorsIntensity(this.color, lightColor, lightIntensity);
+        //ctx.fillStyle = this.color;
         ctx.closePath();
         ctx.fill();
 
@@ -188,13 +156,13 @@ class Circle extends Mesh {
         
         for (var i = 2; i <= sides; i += 1) {
             this.triangles.push(0);
-            this.triangles.push(i);
             this.triangles.push(i-1);
+            this.triangles.push(i);
         }
 
         this.triangles.push(0);
-        this.triangles.push(1);
         this.triangles.push(sides);
+        this.triangles.push(1);
 
     }
     
