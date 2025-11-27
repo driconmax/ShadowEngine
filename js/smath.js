@@ -17,6 +17,49 @@ class Vector3 {
         this.y = y;
         this.z = z;
     }
+
+    clone() {
+        return new Vector3(this.x, this.y, this.z);
+    }
+
+    set(x, y, z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        return this;
+    }
+
+    static Zero() {
+        return new Vector3(0, 0, 0);
+    }
+
+    static Add(a, b) {
+        return new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
+    }
+
+    static Subtract(a, b) {
+        return new Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
+    }
+
+    static Scale(v, scalar) {
+        return new Vector3(v.x * scalar, v.y * scalar, v.z * scalar);
+    }
+
+    static Dot(a, b) {
+        return a.x * b.x + a.y * b.y + a.z * b.z;
+    }
+
+    static Length(v) {
+        return Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+    }
+
+    static Normalize(v) {
+        const length = Vector3.Length(v);
+        if (length === 0) {
+            return new Vector3(0, 0, 0);
+        }
+        return new Vector3(v.x / length, v.y / length, v.z / length);
+    }
 }
 
 class Vector4 {
@@ -304,11 +347,11 @@ class Matrix {
     static CreatePerspectiveMatrix = (fov, aspect, near, far) => {
         const f = 1 / Math.tan(fov / 2);
         const rangeInv = 1 / (far - near);
-    
+
         return [
             [f / aspect, 0, 0, 0],
             [0, f, 0, 0],
-            [0, 0, -(far + near) * rangeInv, (2 * far * near) * rangeInv],
+            [0, 0, -(far + near) * rangeInv, -(2 * far * near) * rangeInv],
             [0, 0, -1, 0]
         ];
     };
@@ -322,5 +365,14 @@ class Matrix {
             x: (ndcX + 1) * 0.5 * canvas.width,
             y: (ndcY + 1) * 0.5 * canvas.height
         };
+    }
+
+    toFloat32Array() {
+        return new Float32Array([
+            this.m[0][0], this.m[1][0], this.m[2][0], this.m[3][0],
+            this.m[0][1], this.m[1][1], this.m[2][1], this.m[3][1],
+            this.m[0][2], this.m[1][2], this.m[2][2], this.m[3][2],
+            this.m[0][3], this.m[1][3], this.m[2][3], this.m[3][3],
+        ]);
     }
 }

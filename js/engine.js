@@ -6,6 +6,10 @@ class Engine {
         this.canvas = canvas;
         this.framerate = Math.max(1, framerate);
         this.renderer = new Renderer(this.canvas, this.framerate, 3, rendererOptions);
+        this.colliderSystem = new ColliderSystem(this);
+        this.physics = {
+            gravity: new Vector3(0, -9.81, 0)
+        };
         this.objs = [];
         this.scripts = [];
         this.onKeyPressDown = {};
@@ -82,7 +86,7 @@ class Engine {
 
     registerScript(scriptClass) {
         const scriptInstance = new scriptClass();
-        scriptInstance.ctx = this.renderer.getContext(); // Pass the rendering context
+        //scriptInstance.ctx = this.renderer.getContext(); // Pass the rendering context
         this.scripts.push(scriptInstance);
         if (typeof scriptInstance.Create === 'function') {
             scriptInstance.SetDefaults(this, this.renderer);
@@ -103,32 +107,46 @@ class Engine {
         });
     }
     
+    resizeCanvasIfNeeded() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
 
-    mainDraw(){
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+        if (this.canvas.width !== w || this.canvas.height !== h) {
+            this.canvas.width = w;
+            this.canvas.height = h;
+        }
+    }
+
+    mainDraw() {
+        this.resizeCanvasIfNeeded();
 
         const meshes = [];
-
         this.scripts.forEach(script => {
-            script.sobjects.forEach(sobject => {
-                const sobjectMatrix = sobject.computeMatrix();
-                sobject.meshes.forEach(mesh => {
-                    mesh.transformationMatrix = sobjectMatrix;
-                });
-                meshes.push(...sobject.meshes);
+            script.sobjects.forEach(obj => {
+                meshes.push(...obj.meshes);
             });
             meshes.push(...script.meshes);
         });
 
-        var now = Date.now();
+        const now = Date.now();
+        const delta = (now - this.lastDrawInterval) / 1000;
 
         this.renderer.UpdateMeshes(meshes);
-        this.renderer.Draw((now - this.lastDrawInterval) / 1000);
+        this.renderer.Draw(delta);
 
         this.lastDrawInterval = now;
     }
-    
+
+    _updateTransforms() {
+        this.scripts.forEach(script => {
+            script.sobjects.forEach(obj => {
+                obj.worldMatrix = obj.computeMatrix();
+                obj.meshes.forEach(mesh => {
+                    mesh.transformationMatrix = obj.worldMatrix;
+                });
+            });
+        });
+    }
     
     mainUpdate(){
         
@@ -141,12 +159,52 @@ class Engine {
         }
 
         var now = Date.now();
+        var delta = (now - this.lastUpdateInterval) / 1000;
+        delta = Math.min(delta, 0.05); // avoid spiral of death
 
         this.scripts.forEach(script => {
-            script.Update((now - this.lastUpdateInterval) / 1000);
+            script.Update(delta);
         });
+
+        this._stepPhysics(delta);
+        this._updateTransforms();
+
+        if (this.colliderSystem) {
+            this.colliderSystem.step(delta);
+        }
 
         this.lastUpdateInterval = now;
         this.mouse.wheelDelta = 0;
+    }
+
+    _collectSObjects() {
+        const results = [];
+        for (let i = 0; i < this.scripts.length; i += 1) {
+            const script = this.scripts[i];
+            if (!script || !Array.isArray(script.sobjects)) {
+                continue;
+            }
+            for (let j = 0; j < script.sobjects.length; j += 1) {
+                const sobject = script.sobjects[j];
+                if (sobject) {
+                    results.push(sobject);
+                }
+            }
+        }
+        return results;
+    }
+
+    _stepPhysics(delta) {
+        if (!this.physics) {
+            return;
+        }
+        const objects = this._collectSObjects();
+        const gravity = this.physics.gravity || Vector3.Zero();
+        for (let i = 0; i < objects.length; i += 1) {
+            const obj = objects[i];
+            if (obj && typeof obj.PhysicsStep === "function") {
+                obj.PhysicsStep(delta, gravity);
+            }
+        }
     }
 }

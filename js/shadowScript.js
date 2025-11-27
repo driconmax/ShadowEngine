@@ -35,7 +35,17 @@ class ShadowScript {
     }
 
     AddSObject(sobject){
+        if (!sobject) {
+            return;
+        }
         this.sobjects.push(sobject);
+        sobject.parentScript = this;
+        if (typeof sobject.SetDefaults === "function") {
+            sobject.SetDefaults(this.engine, this.renderer);
+        } else {
+            sobject.engine = this.engine;
+            sobject.renderer = this.renderer;
+        }
     }
 
 
