@@ -70,7 +70,8 @@ class Mesh {
             v2.y
         );
         
-        ctx.fillStyle = Color.MultiplyColorsIntensity(Color.GetRandomColor().hex(), lightColor, lightIntensity);
+        //ctx.fillStyle = Color.MultiplyColorsIntensity(Color.GetRandomColor().hex(), lightColor, lightIntensity);
+        ctx.fillStyle = Color.MultiplyColorsIntensity(this.color, lightColor, lightIntensity);
         //ctx.fillStyle = this.color;
         ctx.closePath();
         ctx.fill();

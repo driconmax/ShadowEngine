@@ -60,9 +60,9 @@ class Body1 extends ShadowScript {
         //this.renderer.camera.position.y += 10 * timestep;
         //this.renderer.camera.rotation.z += 1 * timestep;
 
-        //this.renderer.light.transform.rotation.y += 1 * timestep;
-        this.renderer.light.transform.rotation.y = 45;
-        this.renderer.light.color = Color.GetRandomColor().hex();
+        this.renderer.light.transform.rotation.y += 1 * timestep;
+        //this.renderer.light.transform.rotation.y = 45;
+        //this.renderer.light.color = Color.GetRandomColor().hex();
         //this.renderer.light.intensity = Math.max(1, this.renderer.light.intensity + Math.random()-.5)
     }
 }
