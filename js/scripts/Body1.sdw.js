@@ -33,13 +33,15 @@ class Body1 extends ShadowScript {
         this.squareObj = new SObject(new Vector3(-0, 50));
         this.AddSObject(this.squareObj);
         this.squareObj.square = new Square(new Vector3(0, 0, 0), 20);
-        this.squareObj.square.SetColor("#ff0000");
+        this.squareObj.square.SetColor("#ffffff");
+        this.squareObj.square.SetTexture("image/grass.png");
         this.squareObj.AddMesh(this.squareObj.square);
 
         this.sideSquareObj = new SObject(new Vector3(-0, 50), new Vector3(0, 0, 0));
         this.AddSObject(this.sideSquareObj);
         this.sideSquareObj.square = new Square(new Vector3(0, 0, 0), 20);
-        this.sideSquareObj.square.SetColor("#00ff00");
+        this.sideSquareObj.square.SetColor("#ffffff");
+        this.sideSquareObj.square.SetTexture("image/grass.png");
         this.sideSquareObj.AddMesh(this.sideSquareObj.square);
     }
 

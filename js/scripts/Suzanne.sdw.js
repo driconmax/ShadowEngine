@@ -2991,6 +2991,7 @@ f 505/526/941 323/549/941 321/550/941
             this.suzanneObj.scale.z = 30;
             this.AddSObject(this.suzanneObj);
             this.suzanneObj.mesh = Mesh.ParseOBJ(text);
+            this.suzanneObj.mesh.SetTexture("image/grass.png");
             this.suzanneObj.AddMesh(this.suzanneObj.mesh);
         //})
     }

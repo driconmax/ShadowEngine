@@ -294,12 +294,11 @@ class Matrix {
     };
 
     static TransformPointDivide = (matrix, point) => {
+        const x = matrix[0][0] * point.x + matrix[0][1] * point.y + matrix[0][2] * point.z + matrix[0][3];
+        const y = matrix[1][0] * point.x + matrix[1][1] * point.y + matrix[1][2] * point.z + matrix[1][3];
+        const z = matrix[2][0] * point.x + matrix[2][1] * point.y + matrix[2][2] * point.z + matrix[2][3];
         const w = matrix[3][0] * point.x + matrix[3][1] * point.y + matrix[3][2] * point.z + matrix[3][3];
-        return new Vector3(
-            (matrix[0][0] * point.x + matrix[0][1] * point.y + matrix[0][2] * point.z + matrix[0][3]) / w,
-            (matrix[1][0] * point.x + matrix[1][1] * point.y + matrix[1][2] * point.z + matrix[1][3]) / w,
-            (matrix[2][0] * point.x + matrix[2][1] * point.y + matrix[2][2] * point.z + matrix[2][3]) / w
-        );
+        return { x, y, z, w };
     };
 
     static CreatePerspectiveMatrix = (fov, aspect, near, far) => {
@@ -316,9 +315,12 @@ class Matrix {
     
     static MapToScreen(matrix, point, canvas) {
         const transformed = Matrix.TransformPointDivide(matrix, point);
+        const w = transformed.w !== 0 ? transformed.w : 1;
+        const ndcX = transformed.x / w;
+        const ndcY = transformed.y / w;
         return {
-            x: (transformed.x + 1) * 0.5 * canvas.width,
-            y: (transformed.y + 1) * 0.5 * canvas.height // Invert Y-axis
+            x: (ndcX + 1) * 0.5 * canvas.width,
+            y: (ndcY + 1) * 0.5 * canvas.height
         };
     }
 }

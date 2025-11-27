@@ -2,9 +2,10 @@ class Engine {
     /**
      *
      */
-    constructor(canvas, framerate, updaterate = 30) {        
+    constructor(canvas, framerate, updaterate = 30, rendererOptions = {}) {        
         this.canvas = canvas;
-        this.renderer = new Renderer(this.canvas, framerate, 3);
+        this.framerate = Math.max(1, framerate);
+        this.renderer = new Renderer(this.canvas, this.framerate, 3, rendererOptions);
         this.objs = [];
         this.scripts = [];
         this.onKeyPressDown = {};
@@ -17,8 +18,7 @@ class Engine {
             wheelDelta: 0,
         }
 
-        this.updaterate = Math.min(1, updaterate);
-        this.updaterate = updaterate;
+        this.updaterate = Math.max(1, updaterate);
 
         
     }
@@ -82,7 +82,7 @@ class Engine {
 
     registerScript(scriptClass) {
         const scriptInstance = new scriptClass();
-        scriptInstance.ctx = this.ctx; // Pass the canvas context
+        scriptInstance.ctx = this.renderer.getContext(); // Pass the rendering context
         this.scripts.push(scriptInstance);
         if (typeof scriptInstance.Create === 'function') {
             scriptInstance.SetDefaults(this, this.renderer);

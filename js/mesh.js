@@ -2,7 +2,7 @@ class Mesh {
     /**
      *
      */
-    constructor(position, vertices = [], triangles = [], backfaceCulling = false) {
+    constructor(position, vertices = [], triangles = [], backfaceCulling = false, uvs = []) {
         this.position = position;
         this.layer = 0;
         this.color = "#534857";
@@ -10,6 +10,8 @@ class Mesh {
         this.triangles = triangles;
         this.backfaceCulling = backfaceCulling;
         this.transformationMatrix = Matrix.CreateTranslationMatrix(0, 0, 0);
+        this.uvs = Array.isArray(uvs) ? uvs : [];
+        this.texture = null;
     }
 
     SetLayer(layer){
@@ -18,6 +20,94 @@ class Mesh {
 
     SetColor(color){
         this.color = color;
+    }
+
+    SetUVs(uvs){
+        this.uvs = Array.isArray(uvs) ? uvs : [];
+    }
+
+    SetTexture(source, options = {}){
+        if (!source) {
+            this.texture = null;
+            return null;
+        }
+
+        const globalConfig = (typeof window !== "undefined" && window.ShadowRunnerConfig) ? window.ShadowRunnerConfig : {};
+        const locationProtocol = (typeof window !== "undefined" && window.location && window.location.protocol) ? window.location.protocol : "";
+        const isFileProtocol = locationProtocol === "file:";
+
+        const skipLocalFlag = !!options.skipLocal || !!globalConfig.skipTextureOnFileProtocol;
+        if (isFileProtocol && skipLocalFlag) {
+            if (typeof console !== "undefined" && console.info) {
+                console.info(`Mesh.SetTexture: skipping texture load for "${source}" while running from file protocol.`);
+            }
+            this.texture = null;
+            return null;
+        }
+
+        if (isFileProtocol && !skipLocalFlag) {
+            if (typeof console !== "undefined" && console.warn) {
+                console.warn(`Mesh.SetTexture: attempting to load "${source}" from file protocol may fail in WebGL. Serve via HTTP or launch with ?localTextures=1 to skip.`);
+            }
+        }
+
+        const texture = {
+            loaded: false,
+            error: false,
+            dirty: true,
+            flipY: options.flipY !== undefined ? !!options.flipY : true,
+            glTexture: null,
+            image: null,
+            width: 0,
+            height: 0,
+            url: null,
+        };
+
+        const assignImage = (image) => {
+            texture.image = image;
+            texture.width = image.width;
+            texture.height = image.height;
+            texture.loaded = true;
+            texture.error = false;
+            texture.dirty = true;
+        };
+
+        const crossOriginValue = options.crossOrigin !== undefined ? options.crossOrigin : globalConfig.crossOrigin;
+
+        if (typeof source === "string") {
+            const image = new Image();
+            if (crossOriginValue !== undefined) {
+                image.crossOrigin = crossOriginValue;
+            }
+            image.onload = () => {
+                assignImage(image);
+            };
+            image.onerror = () => {
+                texture.error = true;
+            };
+            image.src = source;
+            texture.image = image;
+            texture.url = source;
+        } else if (source instanceof HTMLImageElement) {
+            assignImage(source);
+            texture.url = source.src;
+        } else {
+            throw new Error("Mesh.SetTexture: unsupported texture source type.");
+        }
+
+        this.texture = texture;
+        return texture.image;
+    }
+
+    ClearTexture(){
+        if (this.texture) {
+            this.texture.glTexture = null;
+        }
+        this.texture = null;
+    }
+
+    hasTexture(){
+        return !!(this.texture && this.texture.loaded && !this.texture.error);
     }
 
     Draw(ctx, finalMatrix){
@@ -100,24 +190,55 @@ class Mesh {
         const lines = fileContent.split("\n");
         const vertices = [];
         const triangles = [];
-    
-        for (const line of lines) {
-            const parts = line.trim().split(" ");
-            if (parts[0] === "v") {
-                // Parse vertex
+        const tempUVs = [];
+        const vertexUVs = [];
+
+        for (const rawLine of lines) {
+            const line = rawLine.trim();
+            if (!line || line.startsWith("#")) {
+                continue;
+            }
+
+            const parts = line.split(/\s+/);
+            const prefix = parts[0];
+
+            if (prefix === "v") {
                 const x = parseFloat(parts[1]);
                 const y = parseFloat(parts[2]);
                 const z = parseFloat(parts[3]);
                 vertices.push(new Vector3(x, y, z));
-            } else if (parts[0] === "f") {
-                // Parse face
-                const v1 = parseInt(parts[1]) - 1; // Convert to 0-based index
-                const v2 = parseInt(parts[2]) - 1;
-                const v3 = parseInt(parts[3]) - 1;
-                triangles.push(v1, v2, v3);
+            } else if (prefix === "vt") {
+                const u = parseFloat(parts[1]);
+                const v = parts.length > 2 ? parseFloat(parts[2]) : 0;
+                tempUVs.push(new Vector2(u, v));
+            } else if (prefix === "f") {
+                const faceVertices = parts.slice(1);
+                if (faceVertices.length < 3) {
+                    continue;
+                }
+
+                for (let i = 1; i < faceVertices.length - 1; i += 1) {
+                    const faceIndices = [faceVertices[0], faceVertices[i], faceVertices[i + 1]];
+
+                    faceIndices.forEach((token) => {
+                        const components = token.split("/");
+                        const vertexIndex = parseInt(components[0], 10) - 1;
+                        triangles.push(vertexIndex);
+
+                        if (components.length > 1 && components[1]) {
+                            const uvIndex = parseInt(components[1], 10) - 1;
+                            const uv = tempUVs[uvIndex];
+                            if (uv && !vertexUVs[vertexIndex]) {
+                                vertexUVs[vertexIndex] = new Vector2(uv.x, uv.y);
+                            }
+                        }
+                    });
+                }
             }
         }
-        return new Mesh(new Vector3(0,0,0), vertices, triangles);
+
+        const mesh = new Mesh(new Vector3(0,0,0), vertices, triangles, false, vertexUVs);
+        return mesh;
     }
 }
 
@@ -182,6 +303,12 @@ class Square extends Mesh {
             new Vector3(-halfSize, halfSize, 0),
         ];
         const triangles = [0, 2, 1, 0, 3, 2];
-        super(position, vertices, triangles);
+        const uvs = [
+            new Vector2(0, 1),
+            new Vector2(1, 1),
+            new Vector2(1, 0),
+            new Vector2(0, 0),
+        ];
+        super(position, vertices, triangles, false, uvs);
     }
 }
